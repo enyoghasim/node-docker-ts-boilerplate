@@ -9,8 +9,9 @@
     "start": "node dist/app.js",
     "clean": "gulp clean",
     "compose:up": "docker compose --env-file .env.development up --build",
-    "compose:down": "docker compose down",
-    "compose:logs": "docker compose logs -f",
+    "compose:down": "docker compose --env-file .env.development down",
+    "compose:logs": "docker compose --env-file .env.development logs -f",
+    "compose:install": "docker compose run --rm installer",
     "db:generate": "drizzle-kit generate:pg",
     "db:migrate": "drizzle-kit push:pg",
     "db:studio": "drizzle-kit studio",
@@ -51,5 +52,6 @@
     "ts-node": "^10.9.2",
     "tsx": "^4.20.5",
     "typescript": "^5.9.2"
-  }
+  },
+  "packageManager": "yarn@4.9.4+sha512.7b1cb0b62abba6a537b3a2ce00811a843bea02bcf53138581a6ae5b1bf563f734872bd47de49ce32a9ca9dcaff995aa789577ffb16811da7c603dcf69e73750b"
 }

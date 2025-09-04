@@ -27,7 +27,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api', routes);
 
 app.get('/health', (req, res) => {
-  res.json({ status: 'OK', timestamp: new Date().toISOString() });
+  res.json({
+    status: 'OK',
+    timestamp: new Date().toISOString(),
+  });
 });
 
 app.use(errorHandler);
@@ -67,7 +70,7 @@ async function startServer(): Promise<void> {
       const FG_YELLOW = '\x1b[33m';
 
       console.log(
-        `${BRIGHT}${FG_GREEN}Server running on port ${PORT}!${RESET}`
+        `${BRIGHT}${FG_GREEN}Server running on port ${PORT}!!!${RESET}`
       );
       console.log(`  Local:   ${FG_CYAN}${localURL}${RESET}`);
       console.log(`  Network: ${FG_YELLOW}${networkURL}${RESET}`);
@@ -81,11 +84,11 @@ async function startServer(): Promise<void> {
 
 startServer();
 
-// Graceful shutdown
+// Graceful shutdownn
 const FORCE_EXIT_TIMEOUT = 10000; // ms
 
 function gracefulShutdown(reason: string): void {
-  console.log(`Received ${reason}. Starting graceful shutdown...`);
+  console.log(`Received ${reason}. Starting graceful shutdown.....`);
 
   // Force exit if shutdown takes too long
   const forceExit = setTimeout(() => {
