@@ -1,3 +1,5 @@
+// Register module-alias to support TS path aliases (so imports like '@/foo' resolve to ./src/foo at runtime)
+import 'module-alias/register';
 import 'reflect-metadata';
 import './config/env';
 import express from 'express';

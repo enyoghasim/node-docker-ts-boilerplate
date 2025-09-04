@@ -1,5 +1,5 @@
 Arguments: 
-  /Users/giftenyoghasim/.nvm/versions/node/v22.12.0/bin/node /Users/giftenyoghasim/.cache/node/corepack/v1/yarn/1.22.19/bin/yarn.js add -D @types/routing-controllers
+  /Users/giftenyoghasim/.nvm/versions/node/v22.12.0/bin/node /Users/giftenyoghasim/.cache/node/corepack/v1/yarn/1.22.19/bin/yarn.js add -D @types/typedi
 
 PATH: 
   /Users/giftenyoghasim/Downloads/google-cloud-sdk/bin:/Users/giftenyoghasim/.bun/bin:/Users/giftenyoghasim/.nvm/versions/node/v22.12.0/bin:/Users/giftenyoghasim/.local/share/solana/install/active_release/bin:/Library/Frameworks/Python.framework/Versions/3.12/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/usr/local/share/dotnet:~/.dotnet/tools:/usr/local/go/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Users/giftenyoghasim/Downloads/google-cloud-sdk/bin:/Users/giftenyoghasim/.bun/bin:/Users/giftenyoghasim/.nvm/versions/node/v22.12.0/bin:/Users/giftenyoghasim/.local/share/solana/install/active_release/bin:/Library/Frameworks/Python.framework/Versions/3.12/bin:/Users/giftenyoghasim/.cargo/bin:/Users/giftenyoghasim/go/bin:/Users/giftenyoghasim/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand:/usr/local/go/bin:/Users/giftenyoghasim/go/bin
@@ -14,7 +14,7 @@ Platform:
   darwin arm64
 
 Trace: 
-  Error: https://registry.yarnpkg.com/@types%2frouting-controllers: Not found
+  Error: https://registry.yarnpkg.com/@types%2ftypedi: Not found
       at params.callback [as _callback] (/Users/giftenyoghasim/.cache/node/corepack/v1/yarn/1.22.19/lib/cli.js:66145:18)
       at self.callback (/Users/giftenyoghasim/.cache/node/corepack/v1/yarn/1.22.19/lib/cli.js:140890:22)
       at Request.emit (node:events:524:28)
@@ -50,6 +50,7 @@ npm manifest:
     },
     "dependencies": {
       "amqplib": "^0.10.9",
+      "body-parser": "^2.2.0",
       "class-transformer": "^0.5.1",
       "class-validator": "^0.14.2",
       "compression": "^1.8.1",
@@ -60,10 +61,12 @@ npm manifest:
       "helmet": "^8.1.0",
       "ioredis": "^5.7.0",
       "morgan": "^1.10.1",
+      "multer": "^2.0.2",
       "pg": "^8.16.3",
       "redis": "^5.8.2",
       "reflect-metadata": "^0.2.2",
-      "routing-controllers": "^0.11.3"
+      "routing-controllers": "^0.11.3",
+      "typedi": "^0.10.0"
     },
     "devDependencies": {
       "@eslint/eslintrc": "^3.3.1",
@@ -5053,6 +5056,7 @@ Lockfile:
       bare-events "^2.2.0"
   
   "string-width-cjs@npm:string-width@^4.2.0", string-width@^4.1.0, string-width@^4.2.0, string-width@^4.2.3:
+    name string-width-cjs
     version "4.2.3"
     resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
     integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
@@ -5094,6 +5098,7 @@ Lockfile:
       safe-buffer "~5.1.0"
   
   "strip-ansi-cjs@npm:strip-ansi@^6.0.1", strip-ansi@^6.0.0, strip-ansi@^6.0.1:
+    name strip-ansi-cjs
     version "6.0.1"
     resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-6.0.1.tgz#9e26c63d30f53443e9489495b2105d37b67a85d9"
     integrity sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==
@@ -5350,6 +5355,11 @@ Lockfile:
     version "0.0.6"
     resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
     integrity sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==
+  
+  typedi@^0.10.0:
+    version "0.10.0"
+    resolved "https://registry.yarnpkg.com/typedi/-/typedi-0.10.0.tgz#e8f9a5ee100b84addbdfb57fe90d8d9ed2a21dea"
+    integrity sha512-v3UJF8xm68BBj6AF4oQML3ikrfK2c9EmZUyLOfShpJuItAqVBHWP/KtpGinkSsIiP6EZyyb6Z3NXyW9dgS9X1w==
   
   typescript@^5.9.2:
     version "5.9.2"
@@ -5653,6 +5663,7 @@ Lockfile:
     integrity sha512-BN22B5eaMMI9UMtjrGd5g5eCYPpCPDUy0FJXbYsaT5zYxjFOckS53SQDE3pWkVoWpHXVb3BrYcEN4Twa55B5cA==
   
   "wrap-ansi-cjs@npm:wrap-ansi@^7.0.0", wrap-ansi@^7.0.0:
+    name wrap-ansi-cjs
     version "7.0.0"
     resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-7.0.0.tgz#67e145cff510a6a6984bdf1152911d69d2eb9e43"
     integrity sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==
