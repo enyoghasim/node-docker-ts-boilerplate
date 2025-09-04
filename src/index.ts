@@ -4,13 +4,19 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import compression from 'compression';
 import dotenv from 'dotenv';
+import errorHandler from './middlewares/error';
+// NOTE: express-async-errors is incompatible with Express 5 (it relies on
+// private Express v4 internals). We use a small `asyncHandler` wrapper for
+// async route handlers instead. Wrap your async route handlers like:
+//   router.get('/', asyncHandler(async (req, res) => { ... }))
+// See: ./utils/asyncHandler.ts
 import * as os from 'os';
 import http from 'http';
 
 import routes from './routes';
 // import { errorHandler } from './middleware/error.middleware';
 // import { connectDatabase } from './config/database';
-// import { connectRedis } from './config/redis';
+import { connectRedis } from './config/redis';
 // import { connectRabbitMQ } from './config/rabbitmq';
 
 dotenv.config();
@@ -35,7 +41,7 @@ app.get('/health', (req, res) => {
 });
 
 // Error handling
-// app.use(errorHandler);
+app.use(errorHandler);
 
 // Initialize connections and start server
 let server: http.Server | null = null;
@@ -43,7 +49,7 @@ let server: http.Server | null = null;
 async function startServer(): Promise<void> {
   try {
     // await connectDatabase();
-    // await connectRedis();
+    await connectRedis();
     // await connectRabbitMQ();
 
     server = app.listen(PORT, () => {
