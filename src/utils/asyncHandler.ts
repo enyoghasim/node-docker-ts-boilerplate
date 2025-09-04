@@ -5,7 +5,7 @@ export const asyncHandler = (
   fn: (req: Request, res: Response, next: NextFunction) => Promise<any>
 ): RequestHandler => {
   return (req, res, next) => {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+     
     fn(req, res, next).catch(next);
   };
 };
