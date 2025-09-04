@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import './config/env';
 import express from 'express';
 import cors from 'cors';
@@ -9,13 +10,14 @@ import * as os from 'os';
 import http from 'http';
 
 import routes from './routes';
-// import { errorHandler } from './middleware/error.middleware';
+import { useExpressServer } from 'routing-controllers';
 import { connectRedis } from './config/redis';
 import { connectDatabase } from './config/db';
 import { connectRabbitMQ } from './config/rabbitmq';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+
+const PORT = process.env.PORT;
 
 app.use(helmet());
 app.use(cors());
@@ -24,13 +26,14 @@ app.use(morgan('combined'));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/api', routes);
+app.use('/', routes());
 
-app.get('/health', (req, res) => {
-  res.json({
-    status: 'OK',
-    timestamp: new Date().toISOString(),
-  });
+useExpressServer(app, {
+  controllers: [__dirname + '/controllers/*.{js,ts}'],
+  routePrefix: '/api/v1',
+  defaultErrorHandler: false,
+  validation: true,
+  classTransformer: true,
 });
 
 app.use(errorHandler);
