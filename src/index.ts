@@ -1,30 +1,22 @@
+import './config/env';
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import compression from 'compression';
-import dotenv from 'dotenv';
 import errorHandler from './middlewares/error';
-// NOTE: express-async-errors is incompatible with Express 5 (it relies on
-// private Express v4 internals). We use a small `asyncHandler` wrapper for
-// async route handlers instead. Wrap your async route handlers like:
-//   router.get('/', asyncHandler(async (req, res) => { ... }))
-// See: ./utils/asyncHandler.ts
 import * as os from 'os';
 import http from 'http';
 
 import routes from './routes';
 // import { errorHandler } from './middleware/error.middleware';
-// import { connectDatabase } from './config/database';
 import { connectRedis } from './config/redis';
-// import { connectRabbitMQ } from './config/rabbitmq';
-
-dotenv.config();
+import { connectDatabase } from './config/db';
+import { connectRabbitMQ } from './config/rabbitmq';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
 app.use(helmet());
 app.use(cors());
 app.use(compression());
@@ -32,28 +24,23 @@ app.use(morgan('combined'));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// Routes
 app.use('/api', routes);
 
-// Health check
 app.get('/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
-// Error handling
 app.use(errorHandler);
 
-// Initialize connections and start server
 let server: http.Server | null = null;
 
 async function startServer(): Promise<void> {
   try {
-    // await connectDatabase();
+    await connectDatabase();
     await connectRedis();
-    // await connectRabbitMQ();
+    await connectRabbitMQ();
 
     server = app.listen(PORT, () => {
-      // Determine a usable network IP (first non-internal IPv4)
       const getLocalExternalIp = (): string | null => {
         const nets = os.networkInterfaces();
         for (const name of Object.keys(nets)) {
