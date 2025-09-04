@@ -13,5 +13,7 @@ export default defineConfig({
     user: process.env.DATABASE_USER,
     password: process.env.DATABASE_PASSWORD,
     database: process.env.DATABASE_NAME!,
+  // drizzle-kit will attempt SSL if this is truthy; disable for local containers
+  ssl: process.env.DATABASE_SSL === 'true' ? true : false,
   },
 });

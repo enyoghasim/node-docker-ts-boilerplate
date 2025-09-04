@@ -10,6 +10,9 @@ const pool = new Pool({
   user: process.env.DATABASE_USER,
   password: process.env.DATABASE_PASSWORD,
   database: process.env.DATABASE_NAME,
+  // disable SSL when connecting to local/containerized Postgres that doesn't support it
+  // if you need SSL for remote DBs, change to an object or enable via env var
+  ssl: process.env.DATABASE_SSL === 'true' ? true : false,
 });
 
 export const db = drizzle(pool, { schema });

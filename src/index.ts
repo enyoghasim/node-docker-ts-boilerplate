@@ -12,7 +12,11 @@ import * as os from 'os';
 import http from 'http';
 
 import routes from './routes';
-import { useExpressServer } from 'routing-controllers';
+import {
+  useExpressServer,
+  useContainer as rcUseContainer,
+} from 'routing-controllers';
+import { Container } from 'typedi';
 import { connectRedis } from './config/redis';
 import { connectDatabase } from './config/db';
 import { connectRabbitMQ } from './config/rabbitmq';
@@ -29,6 +33,8 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/', routes());
+
+rcUseContainer(Container);
 
 useExpressServer(app, {
   controllers: [__dirname + '/controllers/*.{js,ts}'],
