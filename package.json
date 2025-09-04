@@ -11,7 +11,7 @@
     "compose:up": "docker compose --env-file .env.development up --build",
     "compose:down": "docker compose --env-file .env.development down",
     "compose:logs": "docker compose --env-file .env.development logs -f",
-    "compose:install": "docker compose run --rm installer",
+    "compose:install": "docker compose  --env-file .env.development run --rm installer",
     "db:generate": "drizzle-kit generate:pg",
     "db:migrate": "drizzle-kit push:pg",
     "db:studio": "drizzle-kit studio",
@@ -56,5 +56,5 @@
     "tsx": "^4.20.5",
     "typescript": "^5.9.2"
   },
-  "packageManager": "yarn@4.9.4+sha512.7b1cb0b62abba6a537b3a2ce00811a843bea02bcf53138581a6ae5b1bf563f734872bd47de49ce32a9ca9dcaff995aa789577ffb16811da7c603dcf69e73750b"
+  "packageManager": "yarn@1.22.19+sha1.4ba7fc5c6e704fce2066ecbfb0b0d8976fe62447"
 }
