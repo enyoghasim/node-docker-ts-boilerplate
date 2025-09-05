@@ -53,26 +53,36 @@ async function startServer(): Promise<void> {
     await connectDatabase();
     await connectRedis();
     await connectRabbitMQ();
+    // start background workers that depend on rabbitmq
+    try {
+      // lazy import so worker file isn't loaded before rabbitmq is ready
+      const { startMailerWorker } = await import('./workers/mailer');
+      startMailerWorker().catch((err) =>
+        console.error('Mailer worker failed to start:', err)
+      );
+    } catch (err) {
+      console.error('Failed to initialize mailer worker:', err);
+    }
 
     server = app.listen(PORT, () => {
-      const getLocalExternalIp = (): string | null => {
-        const nets = os.networkInterfaces();
-        for (const name of Object.keys(nets)) {
-          const net = nets[name];
-          if (!net) continue;
-          for (const info of net) {
-            if (info.family === 'IPv4' && !info.internal) {
-              return info.address;
-            }
-          }
-        }
-        return null;
-      };
+      // const getLocalExternalIp = (): string | null => {
+      //   const nets = os.networkInterfaces();
+      //   for (const name of Object.keys(nets)) {
+      //     const net = nets[name];
+      //     if (!net) continue;
+      //     for (const info of net) {
+      //       if (info.family === 'IPv4' && !info.internal) {
+      //         return info.address;
+      //       }
+      //     }
+      //   }
+      //   return null;
+      // };
 
       const hostname = 'localhost';
       const localURL = `http://${hostname}:${PORT}`;
-      const networkIP = getLocalExternalIp() || '127.0.0.1';
-      const networkURL = `http://${networkIP}:${PORT}`;
+      // const networkIP = getLocalExternalIp() || '127.0.0.1';
+      // const networkURL = `http://${networkIP}:${PORT}`;
 
       const RESET = '\x1b[0m';
       const BRIGHT = '\x1b[1m';
@@ -84,7 +94,7 @@ async function startServer(): Promise<void> {
         `${BRIGHT}${FG_GREEN}Server running on port ${PORT}!!!${RESET}`
       );
       console.log(`  Local:   ${FG_CYAN}${localURL}${RESET}`);
-      console.log(`  Network: ${FG_YELLOW}${networkURL}${RESET}`);
+      // console.log(`  Network: ${FG_YELLOW}${networkURL}${RESET}`);
       console.log(`${BRIGHT}Press Ctrl+C to stop the server${RESET}`);
     });
   } catch (error) {

@@ -3,10 +3,14 @@ import { SigninDto, SignupDto } from '@/dtos/auth';
 import { UserService } from '@/services/user';
 import { BadRequestError, UnauthorizedError } from 'routing-controllers';
 import { compare, genSalt, hash } from 'bcryptjs';
+import { MailerService } from './mailer';
 
 @Service()
 export class AuthService {
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private mailerService: MailerService
+  ) {}
 
   async signin(signinDto: SigninDto) {
     const { email, password } = signinDto;

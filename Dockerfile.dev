@@ -2,6 +2,7 @@ FROM node:22.12.0-alpine
 
 WORKDIR /app
 
+# commenting out to use custom install steps from compose file
 # Copy only dependency files first
 # COPY package.json yarn.lock ./
 

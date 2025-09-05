@@ -1,0 +1,21 @@
+<mjml>
+  <mj-body>
+    <mj-section background-color="#f5f7fb">
+      <mj-column width="100%">
+        <mj-text align="center" font-size="18px" color="#555"
+          >{{{appName}}}</mj-text
+        >
+      </mj-column>
+    </mj-section>
+
+    <!-- content placeholder -->
+    {{{body}}}
+
+    <mj-section>
+      <mj-column>
+        <mj-divider border-color="#e0e6ef" />
+        <mj-text font-size="12px" color="#888">© {{{appName}}}</mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

@@ -28,7 +28,7 @@ Trace:
 
 npm manifest: 
   {
-    "name": "luxestay-api-n",
+    "name": "api-n",
     "version": "1.0.0",
     "main": "index.js",
     "license": "MIT",
@@ -37,10 +37,10 @@ npm manifest:
       "build": "gulp build",
       "start": "node dist/app.js",
       "clean": "gulp clean",
-      "compose:up": "docker compose --env-file .env.development up --build",
-      "compose:down": "docker compose --env-file .env.development down",
-      "compose:logs": "docker compose --env-file .env.development logs -f",
-      "compose:install": "docker compose  --env-file .env.development run --rm installer",
+      "compose:up": "docker compose --env-file .env.development.local up --build",
+      "compose:down": "docker compose --env-file .env.development.local down",
+      "compose:logs": "docker compose --env-file .env.development.local logs -f",
+      "compose:install": "docker compose  --env-file .env.development.local run --rm installer",
       "db:generate": "drizzle-kit generate:pg",
       "db:migrate": "drizzle-kit push:pg",
       "db:studio": "drizzle-kit studio",

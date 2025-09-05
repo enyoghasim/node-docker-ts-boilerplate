@@ -1,0 +1,7 @@
+<mj-section>
+  <mj-column>
+    <mj-text font-size="20px">Welcome, {{ firstname }}!</mj-text>
+    <mj-text> Thanks for joining. Your email is {{ email }}. </mj-text>
+    <mj-button href="{{verificationUrl}}">Verify your email</mj-button>
+  </mj-column>
+</mj-section>

@@ -3,3 +3,5 @@
 /dist
 /temp
 .codegpt
+.env.local
+.env.*.local
