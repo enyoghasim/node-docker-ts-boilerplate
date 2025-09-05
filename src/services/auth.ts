@@ -7,6 +7,18 @@ import { MailerService } from './mailer';
 
 import { OAuth2Client } from 'google-auth-library';
 
+// testing mailer
+// this.mailerService.sendTemplatedEmail({
+//   template: 'welcome',
+//   variables: {
+//     firstname: 'Geez',
+//     email: 'hello@gmail.com',
+//     verificationUrl: 'https://example.com/verify',
+//   },
+//   recipients: 'hello@gmail.com',
+//   subject: 'Welcome to app',
+// });
+
 @Service()
 export class AuthService {
   private googleClient: OAuth2Client;
@@ -23,17 +35,6 @@ export class AuthService {
   }
 
   async signin(signinDto: SigninDto) {
-    // this.mailerService.sendTemplatedEmail({
-    //   template: 'welcome',
-    //   variables: {
-    //     firstname: 'Geez',
-    //     email: 'geezyenyoghasim@gmail.com',
-    //     verificationUrl: 'https://example.com/verify',
-    //   },
-    //   recipients: 'geezyenyoghasim@gmail.com',
-    //   subject: 'Welcome to app',
-    // });
-
     const { email, password } = signinDto;
 
     const user = await this.userService.findByEmail(email.toLowerCase());
