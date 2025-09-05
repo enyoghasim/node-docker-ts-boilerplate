@@ -7,7 +7,10 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import compression from 'compression';
 import errorHandler from './middlewares/error';
+import { buildSpec } from '@/docs/openapi';
 import http from 'http';
+
+import * as swaggerUi from 'swagger-ui-express';
 
 import routes from './routes';
 import {
@@ -46,6 +49,22 @@ useExpressServer(app, {
   classTransformer: true,
 });
 
+// Build OpenAPI spec after controllers have been registered
+const spec = buildSpec('/api/v1');
+
+app.get('/openapi.json', (_req, res) => res.json(spec));
+app.use(
+  '/docs',
+  swaggerUi.serve,
+  // enable cookies to be sent for Try-it-out and disable submit buttons for safety
+  swaggerUi.setup(spec, {
+    swaggerOptions: {
+      requestCredentials: 'include',
+      supportedSubmitMethods: [],
+    },
+  })
+);
+
 app.use(errorHandler);
 
 let server: http.Server | null = null;
@@ -76,7 +95,6 @@ async function startServer(): Promise<void> {
         `${BRIGHT}${FG_GREEN}Server running on port ${PORT}!!!${RESET}`
       );
       console.log(`  Local:   ${FG_CYAN}${localURL}${RESET}`);
-      // console.log(`  Network: ${FG_YELLOW}${networkURL}${RESET}`);
       console.log(`${BRIGHT}Press Ctrl+C to stop the server${RESET}`);
     });
   } catch (error) {
@@ -87,19 +105,16 @@ async function startServer(): Promise<void> {
 
 startServer();
 
-// Graceful shutdownn
-const FORCE_EXIT_TIMEOUT = 10000; // ms
+const FORCE_EXIT_TIMEOUT = 10000;
 
 function gracefulShutdown(reason: string): void {
   console.log(`Received ${reason}. Starting graceful shutdown.....`);
 
-  // Force exit if shutdown takes too long
   const forceExit = setTimeout(() => {
     console.error('Forcing shutdown after timeout');
     process.exit(1);
   }, FORCE_EXIT_TIMEOUT);
 
-  // Close HTTP server (stop accepting new connections)
   if (server) {
     server.close((err) => {
       clearTimeout(forceExit);

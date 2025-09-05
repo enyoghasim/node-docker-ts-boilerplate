@@ -1,5 +1,6 @@
 import { AuthMiddleware } from '@/middlewares/auth';
 import { UserService } from '@/services/user';
+import { UserResponseDto } from '@/dtos/user';
 import { SessionData } from 'express-session';
 import {
   Get,
@@ -9,6 +10,9 @@ import {
   UseBefore,
 } from 'routing-controllers';
 import { Service } from 'typedi';
+import { instanceToPlain } from 'class-transformer';
+import { ResponseSchema } from 'routing-controllers-openapi';
+import { successResponse } from '@/utils/responseFactory';
 
 @Service()
 @JsonController('/user')
@@ -16,7 +20,11 @@ import { Service } from 'typedi';
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @Get('/')
+  @Get()
+  @ResponseSchema(UserResponseDto, {
+    statusCode: 200,
+    description: 'User details fetched successfully',
+  })
   async getUserDetails(@Session() session: SessionData) {
     if (!session.user) throw new UnauthorizedError('User not authenticated');
 
@@ -24,13 +32,18 @@ export class UserController {
 
     if (!user) throw new UnauthorizedError('User not found');
 
-    return {
-      id: user.id,
-      email: user?.email,
-      firstname: user?.firstname,
-      lastname: user?.lastname,
-      phone: user?.phone,
-      createdAt: user?.createdAt,
-    };
+    const dto = new UserResponseDto();
+
+    dto.id = user.id;
+    dto.email = user.email;
+    dto.firstname = user.firstname ?? undefined;
+    dto.lastname = user.lastname ?? undefined;
+    dto.phone = user.phone ?? undefined;
+    dto.createdAt = user.createdAt?.toISOString?.() || String(user.createdAt);
+
+    return successResponse(
+      instanceToPlain(dto),
+      'User details fetched successfully'
+    );
   }
 }

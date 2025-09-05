@@ -25,6 +25,7 @@ export class AuthController {
 
   @Post('/signin')
   @JoiBody(SigninSchema)
+  @HttpCode(200)
   async signin(@Body() body: SigninDto, @Session() sess: SessionData) {
     const user = await this.authService.signin(body);
 
@@ -49,7 +50,4 @@ export class AuthController {
 
     return successResponse(null, 'Signed out successfully');
   }
-
-  // forgot password
-  // reset password
 }
