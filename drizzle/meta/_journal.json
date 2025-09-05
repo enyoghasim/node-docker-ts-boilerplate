@@ -8,6 +8,13 @@
       "when": 1757028155704,
       "tag": "0000_aromatic_professor_monster",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1757076280890,
+      "tag": "0001_curved_wonder_man",
+      "breakpoints": true
     }
   ]
 }
