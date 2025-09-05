@@ -31,7 +31,7 @@ export class AuthService {
     //     verificationUrl: 'https://example.com/verify',
     //   },
     //   recipients: 'geezyenyoghasim@gmail.com',
-    //   subject: 'Welcome to Luxestay',
+    //   subject: 'Welcome to app',
     // });
 
     const { email, password } = signinDto;
