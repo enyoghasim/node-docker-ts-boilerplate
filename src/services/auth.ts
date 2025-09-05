@@ -13,6 +13,17 @@ export class AuthService {
   ) {}
 
   async signin(signinDto: SigninDto) {
+    // this.mailerService.sendTemplatedEmail({
+    //   template: 'welcome',
+    //   variables: {
+    //     firstname: 'Geez',
+    //     email: 'geezyenyoghasim@gmail.com',
+    //     verificationUrl: 'https://example.com/verify',
+    //   },
+    //   recipients: 'geezyenyoghasim@gmail.com',
+    //   subject: 'Welcome to Luxestay',
+    // });
+
     const { email, password } = signinDto;
 
     const user = await this.userService.findByEmail(email.toLowerCase());
@@ -25,8 +36,6 @@ export class AuthService {
     const isValidPassword = await compare(password, user.password!);
 
     if (!isValidPassword) throw new UnauthorizedError('Invalid credentials');
-
-    // login user here (e.g., generate JWT, set session, etc.)
 
     return user;
   }
@@ -57,4 +66,6 @@ export class AuthService {
 
     return user;
   }
+
+  async verifyEmail(userId: number, token: string) {}
 }

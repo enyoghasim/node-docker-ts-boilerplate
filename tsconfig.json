@@ -16,6 +16,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "baseUrl": "./src",
+    "typeRoots": ["./src/@types", "./node_modules/@types"],
     "paths": {
       "@/*": ["*"],
       "@config/*": ["config/*"],
@@ -24,10 +25,17 @@
       "@models/*": ["models/*"],
       "@routes/*": ["routes/*"],
       "@services/*": ["services/*"],
-      "@types/*": ["types/*"],
+      "@types/*": ["@types/*"],
       "@utils/*": ["utils/*"]
     }
   },
-  "include": ["src/**/*"],
+
+  "include": [
+    "src/**/*",
+    "src/*.ts",
+    "src/**/*.ts",
+    "src/index.ts",
+    "src/validations"
+  ],
   "exclude": ["node_modules", "dist"]
 }

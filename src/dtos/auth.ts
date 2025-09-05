@@ -26,3 +26,13 @@ export class SigninDto {
   @MinLength(6, { message: 'Password must be at least 6 characters long' })
   password!: string;
 }
+
+export class GenerateTokenDto {
+  // this one is the type can be otp, link, etc
+  type!: 'otp' | 'link';
+
+  // scope can be either reset-password, email-verification, etc
+  scope!: 'reset-password' | 'email-verification' | 'phone-verification';
+
+  // the user id the
+}

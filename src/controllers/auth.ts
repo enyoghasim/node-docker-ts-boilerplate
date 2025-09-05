@@ -1,11 +1,11 @@
 import { JoiBody } from '@/decorators/joi';
 import { SigninDto, SignupDto } from '@/dtos/auth';
 import { AuthService } from '@/services/auth';
-import { Body, HttpCode, JsonController, Post } from 'routing-controllers';
+import { Body, HttpCode, JsonController, Post, Req } from 'routing-controllers';
 import { Service } from 'typedi';
 import { SigninSchema, SignupSchema } from '@/validators/auth';
 import { successResponse } from '@/utils/responseFactory';
-
+import { Request } from 'express';
 @Service()
 @JsonController('/auth')
 export class AuthController {
@@ -13,8 +13,9 @@ export class AuthController {
 
   @Post('/signin')
   @JoiBody(SigninSchema)
-  async signin(@Body() signinDto: SigninDto) {
-    await this.authService.signin(signinDto);
+  async signin(@Body() body: SigninDto, @Req() req: Request) {
+    const user = await this.authService.signin(body);
+    req.session.user = user.id;
 
     return successResponse(null, 'Signed in successfully');
   }

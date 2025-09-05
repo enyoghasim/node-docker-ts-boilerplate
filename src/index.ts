@@ -1,4 +1,3 @@
-// Register module-alias to support TS path aliases (so imports like '@/foo' resolve to ./src/foo at runtime)
 import 'module-alias/register';
 import 'reflect-metadata';
 import './config/env';
@@ -8,7 +7,6 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import compression from 'compression';
 import errorHandler from './middlewares/error';
-import * as os from 'os';
 import http from 'http';
 
 import routes from './routes';
@@ -20,10 +18,14 @@ import { Container } from 'typedi';
 import { connectRedis } from './config/redis';
 import { connectDatabase } from './config/db';
 import { connectRabbitMQ } from './config/rabbitmq';
+import session from './config/session';
+const PORT = process.env.PORT;
 
 const app = express();
 
-const PORT = process.env.PORT;
+app.set('trust proxy', 1);
+
+app.use(session);
 
 app.use(helmet());
 app.use(cors());
@@ -53,9 +55,7 @@ async function startServer(): Promise<void> {
     await connectDatabase();
     await connectRedis();
     await connectRabbitMQ();
-    // start background workers that depend on rabbitmq
     try {
-      // lazy import so worker file isn't loaded before rabbitmq is ready
       const { startMailerWorker } = await import('./workers/mailer');
       startMailerWorker().catch((err) =>
         console.error('Mailer worker failed to start:', err)
@@ -65,30 +65,12 @@ async function startServer(): Promise<void> {
     }
 
     server = app.listen(PORT, () => {
-      // const getLocalExternalIp = (): string | null => {
-      //   const nets = os.networkInterfaces();
-      //   for (const name of Object.keys(nets)) {
-      //     const net = nets[name];
-      //     if (!net) continue;
-      //     for (const info of net) {
-      //       if (info.family === 'IPv4' && !info.internal) {
-      //         return info.address;
-      //       }
-      //     }
-      //   }
-      //   return null;
-      // };
-
       const hostname = 'localhost';
       const localURL = `http://${hostname}:${PORT}`;
-      // const networkIP = getLocalExternalIp() || '127.0.0.1';
-      // const networkURL = `http://${networkIP}:${PORT}`;
-
       const RESET = '\x1b[0m';
       const BRIGHT = '\x1b[1m';
       const FG_GREEN = '\x1b[32m';
       const FG_CYAN = '\x1b[36m';
-      const FG_YELLOW = '\x1b[33m';
 
       console.log(
         `${BRIGHT}${FG_GREEN}Server running on port ${PORT}!!!${RESET}`
