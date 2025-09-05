@@ -49,4 +49,7 @@ export class AuthController {
 
     return successResponse(null, 'Signed out successfully');
   }
+
+  // forgot password
+  // reset password
 }
