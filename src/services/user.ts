@@ -17,4 +17,8 @@ export class UserService {
   async create(user: typeof users.$inferInsert) {
     return db.insert(users).values(user).returning();
   }
+
+  async update(id: number, user: Partial<typeof users.$inferInsert>) {
+    return db.update(users).set(user).where(eq(users.id, id)).returning();
+  }
 }

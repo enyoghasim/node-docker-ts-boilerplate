@@ -27,6 +27,10 @@ export class SigninDto {
   password!: string;
 }
 
+export class GoogleAuthDto {
+  code!: string;
+}
+
 export class GenerateTokenDto {
   // this one is the type can be otp, link, etc
   type!: 'otp' | 'link';

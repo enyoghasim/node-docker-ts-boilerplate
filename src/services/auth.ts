@@ -5,12 +5,22 @@ import { BadRequestError, UnauthorizedError } from 'routing-controllers';
 import { compare, genSalt, hash } from 'bcryptjs';
 import { MailerService } from './mailer';
 
+import { OAuth2Client } from 'google-auth-library';
+
 @Service()
 export class AuthService {
+  private googleClient: OAuth2Client;
+
   constructor(
     private userService: UserService,
     private mailerService: MailerService
-  ) {}
+  ) {
+    this.googleClient = new OAuth2Client(
+      process.env.GOOGLE_OAUTH_CLIENT_ID,
+      process.env.GOOGLE_OAUTH_CLIENT_SECRET,
+      'postmessage'
+    );
+  }
 
   async signin(signinDto: SigninDto) {
     // this.mailerService.sendTemplatedEmail({
@@ -68,4 +78,92 @@ export class AuthService {
   }
 
   async verifyEmail(userId: number, token: string) {}
+
+  async googleSignin(code: string) {
+    const userInfo = await this.validateGoogleCode(code);
+
+    if (!userInfo) {
+      throw new BadRequestError('Google account has no email associated');
+    }
+
+    const user = await this.userService.findByEmail(
+      userInfo.email.toLowerCase()
+    );
+
+    if (user) {
+      await this.userService.update(user.id, {
+        googleId: userInfo.googleId,
+        hasVerifiedEmail: true,
+      });
+      return user;
+    } else {
+      const newUser = await this.userService.create({
+        email: userInfo.email.toLowerCase(),
+        firstname: userInfo.name.split(' ')[0] || '',
+        lastname: userInfo.name.split(' ').slice(1).join(' ') || '',
+        googleId: userInfo.googleId,
+        hasVerifiedEmail: true,
+      });
+
+      if (!newUser[0]) throw new Error('User creation failed');
+
+      return newUser[0];
+    }
+  }
+
+  async validateGoogleCode(authorizationCode: string) {
+    const { tokens } = await this.googleClient.getToken(authorizationCode);
+
+    if (!tokens.id_token) {
+      throw new BadRequestError('No ID token received from Google');
+    }
+
+    console.log(
+      'Successfully exchanged code for tokens, verifying ID token...'
+    );
+
+    // Verify the ID token using OAuth2Client
+    const ticket = await this.googleClient.verifyIdToken({
+      idToken: tokens.id_token,
+      audience: process.env.GOOGLE_OAUTH_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+
+    if (!payload) {
+      throw new BadRequestError('Invalid ID token payload');
+    }
+
+    // Verify token expiration
+    const now = Math.floor(Date.now() / 1000);
+    if (payload.exp && payload.exp < now) {
+      throw new BadRequestError('ID token has expired');
+    }
+
+    // Verify issuer
+    if (
+      payload.iss !== 'https://accounts.google.com' &&
+      payload.iss !== 'accounts.google.com'
+    ) {
+      throw new BadRequestError('Invalid token issuer');
+    }
+
+    // Verify audience
+    if (payload.aud !== process.env.GOOGLE_OAUTH_CLIENT_ID) {
+      throw new BadRequestError('Invalid token audience');
+    }
+
+    if (!payload.email) {
+      throw new BadRequestError('Email not found in ID token');
+    }
+
+    return {
+      googleId: payload.sub,
+      email: payload.email,
+      name: payload.name || '',
+      picture: payload.picture || '',
+      emailVerified: payload.email_verified || false,
+      tokens, // Include tokens for potential future use (refresh tokens, etc.)
+    };
+  }
 }

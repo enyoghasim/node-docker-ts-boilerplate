@@ -44,3 +44,9 @@ export const SignupSchema = Joi.object({
   password,
   phone: phone.required(),
 }).required();
+
+export const OauthValidator = Joi.object({
+  code: Joi.string().required().messages({
+    'string.empty': 'Authorization code is required',
+  }),
+}).required();

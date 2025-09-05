@@ -1,5 +1,5 @@
 import { JoiBody } from '@/decorators/joi';
-import { SigninDto, SignupDto } from '@/dtos/auth';
+import { GoogleAuthDto, SigninDto, SignupDto } from '@/dtos/auth';
 import { AuthService } from '@/services/auth';
 import {
   Body,
@@ -49,5 +49,16 @@ export class AuthController {
     });
 
     return successResponse(null, 'Signed out successfully');
+  }
+
+  @Post('/google-signin')
+  async googleSignin(
+    @Body() body: GoogleAuthDto,
+    @Session() sess: SessionData
+  ) {
+    const user = await this.authService.googleSignin(body.code);
+
+    sess.user = user.id;
+    return successResponse(null, 'Signed in successfully');
   }
 }
